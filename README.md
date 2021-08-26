@@ -31,6 +31,8 @@ Complete the following steps to implement the auction system, in order:
 9. After the auction is complete, either the creator or winning bidder should be able to 'settle' the auction, with the tokens transferred to the creator, and the NFT transferred to the winning bidder.
 10. The auction should have a 'quick finish' option - if any bid comes in that is 5 times higher than the previous bid, the creator should be able to end the instantly end auction if they so choose (as long as the auction hasn't ended already).
 11. The auction should support 'third-party delivery' - when a bidder places a bid, they can optionally choose to have the NFT delivered to a different address if they win. This third-party address should provide a signature attesting that they want to receive the NFT, which the bidder should provide at the time of the transaction. A bid should be invalid if the signature is not provided, or the signer does not match the desired third-party receiver.
+12. The auction should support bundling - instead of one ERC721 asset being auctioned off, a creator should be able to auction multiple assets off in a bundle. There is a single auction for the bundle, no matter how many assets go into the bundle. All assets should be delivered at once during settlement.
+13. Extend bundling to also support ERC1155 and ERC20.
 
 ## Follow-Up Questions
 
