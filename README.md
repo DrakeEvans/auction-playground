@@ -37,5 +37,5 @@ Complete the following steps to implement the auction system, in order:
 ## Follow-Up Questions
 
 1. How would you design an auction system that does not require bidders to post collateral? Are there any additional off-chain considerations for this system?
-2. We just implemented a classic auction where bids are taken and the highest bidder wins. What other auction mechanisms exist in NFT marketplaces today. What are the pros vs. cons of these approaches?
+2. We just implemented a classic auction where bids are taken and the highest bidder wins. What other auction mechanisms exist in NFT marketplaces today? What are the pros vs. cons of these approaches?
 3. For high-demand NFT mints, there are often more willing minters than editions available to mint. How would you design a minting system for a high-demand NFT release that ensures both smooth UX and fairness? Hint: gas auctions and setups that favor bots aren't fair.
