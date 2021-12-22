@@ -1,12 +1,12 @@
-# Pawn.fi Solidity Interview Challenge
+# Arcade.xyz Solidity Interview Challenge
 
-Welcome to the PawnFi Solidity Interview Challenge! This challenge is meant to test your skills around protocol design, architecture, and implementation. It shouldn't be too hard, but it shouldn't be too easy either. 
+Welcome to the Arcade.xyz Solidity Interview Challenge! This challenge is meant to test your skills around protocol design, architecture, and implementation. It shouldn't be too hard, but it shouldn't be too easy either.
 
 The challenge will take place in a series of steps, as seen below. Please do each step one at a time, in order. We cannot give credit for any completed steps that may be after an uncompleted step.
 
-If you have any questions, feel free to ask your interviewer. Talking is good! The more we hear from you as you work through the problem below, the better sense we can get of your strengths and weaknesses as a Solidity developer. We want you to get as far as you can, but by no means do you need to complete every step to be successful. The most important thing is for your interviewer to get a sense of how you'd approach a problem and work on it.
+If you have any questions, feel free to ask your contact. Talking is good! The more we hear from you as you work through the problem below, the better sense we can get of your strengths and weaknesses as a Solidity developer. We want you to get as far as you can, but by no means do you need to complete every step to be successful. The most important thing is for your interviewer to get a sense of how you'd approach a problem and work on it.
 
-To work on the challenge, please clone this repo and create a branch with your name on it. Remember to set up the repo and install dependencies before you work on your code. The repo comes pre-loaded with a set of linters, configs, and test harnesses for your convenience. When the challenge ends, please push your branch.
+To work on the challenge, please clone this repo and create a branch with your name on it. Remember to set up the repo and install dependencies before you work on your code. The repo comes pre-loaded with a set of linters, configs, and test harnesses for your convenience, but no starter code. When the challenge ends, please push your branch.
 
 ```
 git clone https://github.com/Non-fungible-Technologies/solidity-interview-challenge
@@ -17,7 +17,7 @@ yarn
 
 ## Prompt
 
-The goal of this challenge is to design an on-chain auction system for NFTs. By the end of the challenge, we should have a fully-functional auction contract, similar to one that supports ecosystems like [Foundation](https://foundation.app) and [SuperRare](https://superrare.co).
+The goal of this challenge is to design an on-chain auction system for NFTs. By the end of the challenge, we should have a fully-functional auction contract, similar to one that supports ecosystems like [Foundation](https://foundation.app) and [SuperRare](https://superrare.co). Please write your contracts from scratch, and refrain from copying these - we've studied these contracts and we know the idioms they use.
 
 Complete the following steps to implement the auction system, in order:
 
@@ -34,8 +34,12 @@ Complete the following steps to implement the auction system, in order:
 12. The auction should support bundling - instead of one ERC721 asset being auctioned off, a creator should be able to auction multiple assets off in a bundle. There is a single auction for the bundle, no matter how many assets go into the bundle. All assets should be delivered at once during settlement.
 13. Extend bundling to also support ERC1155 and ERC20.
 
+Beyond the system requirements above, and the guideliens on how much time to spend, this challenge is open-ended. Experimentation is encouraged! Feel free to extend with new features, or harden the system with tests and/or documentation.
+
 ## Follow-Up Questions
 
 1. How would you design an auction system that does not require bidders to post collateral? Are there any additional off-chain considerations for this system?
 2. We just implemented a classic auction where bids are taken and the highest bidder wins. What other auction mechanisms exist in NFT marketplaces today? What are the pros vs. cons of these approaches?
 3. For high-demand NFT mints, there are often more willing minters than editions available to mint. How would you design a minting system for a high-demand NFT release that ensures both smooth UX and fairness? Hint: gas auctions and setups that favor bots aren't fair.
+
+Please answer these 3 questions in a separate Markdown file, submitted with your branch.
