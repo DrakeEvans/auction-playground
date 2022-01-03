@@ -43,7 +43,7 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
         _;
     }
 
-    function bid(uint256 _bidAmount) external onlyActiveAuction nonReentrant {
+    function bid(uint256 _bidAmount) external {
         if (bids.length > 0) {
             // gas savings
             Bid storage lastBid = bids[bids.length - 1];
@@ -76,7 +76,7 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
         uint256 _bidAmount,
         address _recipient,
         bytes memory _signedMessage
-    ) external onlyActiveAuction nonReentrant {
+    ) external onlyActiveAuction {
         //Check signature
         require(
             bytes32("permissionGranted").toEthSignedMessageHash().recover(_signedMessage) == _recipient,
@@ -86,7 +86,7 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
         this.bid(_bidAmount);
     }
 
-    function endAuction() public onlyOwner onlyActiveAuction {
+    function endAuction() public onlyOwner {
         require(bids.length > 0, "Only able to end the auction when at least one bid has been placed");
         uint256 _lastBidIndex = bids.length - 1;
         if (_lastBidIndex > 0) {
