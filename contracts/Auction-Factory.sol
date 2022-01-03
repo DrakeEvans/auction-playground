@@ -2,9 +2,12 @@
 pragma solidity >=0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/interfaces/IERC721.sol";
+import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "./Auction.sol";
+import "./Prize-Manager.sol";
 
-contract AuctionFactory is Ownable {
+contract AuctionFactory is Ownable, PrizeManager {
     address public auctionLibrary;
 
     constructor(address _auctionLibrary) Ownable() {
@@ -17,21 +20,31 @@ contract AuctionFactory is Ownable {
         address _auctionOwner,
         address _paymentToken,
         uint256 _minimumTickSize,
-        address _prizeContract,
-        uint256 _prizeId
+        Prize[] memory _prizes,
+        uint256 _minimumBid
     ) public returns (address) {
         Auction _auction = new Auction(auctionLibrary);
 
-        _auction.initialize(_auctionOwner, _paymentToken, _minimumTickSize, _prizeContract, _prizeId, 0);
+        _auction.initialize(_auctionOwner, _paymentToken, _minimumTickSize, _prizes, _minimumBid);
 
-        IERC721(_prizeContract).transferFrom(_auctionOwner, address(this), _prizeId);
+        transferPrizes(_auctionOwner, address(_auction), _prizes);
 
-        emit NewAuction(msg.sender, address(_auction));
+        emit NewAuction(_auctionOwner, address(_auction));
 
         return address(_auction);
     }
 
-    // overloaded with minimum bid size
+    // overloaded without minumum bid
+    function createAuction(
+        address _auctionOwner,
+        address _paymentToken,
+        uint256 _minimumTickSize,
+        Prize[] memory _prizes
+    ) public returns (address) {
+        return this.createAuction(_auctionOwner, _paymentToken, _minimumTickSize, _prizes, 0);
+    }
+
+    // Marked for deprecation
     function createAuction(
         address _auctionOwner,
         address _paymentToken,
@@ -40,14 +53,21 @@ contract AuctionFactory is Ownable {
         uint256 _prizeId,
         uint256 _minimumBid
     ) public returns (address) {
-        Auction _auction = new Auction(auctionLibrary);
+        Prize[] memory _prizes = new Prize[](1);
+        _prizes[0] = Prize(PrizeInterface.ERC721, _prizeContract, _prizeId, 0);
+        return this.createAuction(_auctionOwner, _paymentToken, _minimumTickSize, _prizes, _minimumBid);
+    }
 
-        _auction.initialize(_auctionOwner, _paymentToken, _minimumTickSize, _prizeContract, _prizeId, _minimumBid);
-
-        IERC721(_prizeContract).transferFrom(_auctionOwner, address(this), _prizeId);
-
-        emit NewAuction(msg.sender, address(_auction));
-
-        return address(_auction);
+    // Marked for deprecation
+    function createAuction(
+        address _auctionOwner,
+        address _paymentToken,
+        uint256 _minimumTickSize,
+        address _prizeContract,
+        uint256 _prizeId
+    ) public returns (address) {
+        Prize[] memory _prizes = new Prize[](1);
+        _prizes[0] = Prize(PrizeInterface.ERC721, _prizeContract, _prizeId, 0);
+        return this.createAuction(_auctionOwner, _paymentToken, _minimumTickSize, _prizes, 0);
     }
 }
