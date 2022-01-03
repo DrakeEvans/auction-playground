@@ -19,8 +19,9 @@ contract AuctionFactory is Ownable {
         uint256 _minimumTickSize,
         address _prizeContract,
         uint256 _prizeId
-    ) external returns (address) {
+    ) public returns (address) {
         Auction _auction = new Auction(auctionLibrary);
+
         _auction.initialize(_auctionOwner, _paymentToken, _minimumTickSize, _prizeContract, _prizeId, 0);
 
         IERC721(_prizeContract).transferFrom(_auctionOwner, address(this), _prizeId);
@@ -38,8 +39,9 @@ contract AuctionFactory is Ownable {
         address _prizeContract,
         uint256 _prizeId,
         uint256 _minimumBid
-    ) external returns (address) {
+    ) public returns (address) {
         Auction _auction = new Auction(auctionLibrary);
+
         _auction.initialize(_auctionOwner, _paymentToken, _minimumTickSize, _prizeContract, _prizeId, _minimumBid);
 
         IERC721(_prizeContract).transferFrom(_auctionOwner, address(this), _prizeId);
