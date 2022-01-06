@@ -11,7 +11,7 @@ import "./Prize-Manager.sol";
 import "hardhat/console.sol";
 
 contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
-    using SafeMath for uint256;
+    using SafeMath for uint256; // built in to solidity >0.8 but just wanted to play around
     using ECDSA for bytes32;
 
     address public paymentToken;
@@ -43,7 +43,7 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
         _;
     }
 
-    function bid(uint256 _bidAmount) external {
+    function _bidBase(uint256 _bidAmount, address _recipient) private {
         if (bids.length > 0) {
             // gas savings
             Bid storage lastBid = bids[bids.length - 1];
@@ -68,8 +68,11 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
         uint256 _amountToTransfer = _bidAmount.sub(_amountLocked);
         bool _sendERC20 = IERC20(paymentToken).transferFrom(msg.sender, address(this), _amountToTransfer);
         require(_sendERC20, "Transfer of bid amount failed");
+        bids.push(Bid({ timestamp: block.timestamp, amount: _bidAmount, bidder: msg.sender, recipient: _recipient }));
+    }
 
-        bids.push(Bid({ timestamp: block.timestamp, amount: _bidAmount, bidder: msg.sender, recipient: msg.sender }));
+    function bid(uint256 _bidAmount) external {
+        _bidBase(_bidAmount, msg.sender);
     }
 
     function bid(
@@ -79,21 +82,24 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
     ) external onlyActiveAuction {
         //Check signature
         require(
-            bytes32("permissionGranted").toEthSignedMessageHash().recover(_signedMessage) == _recipient,
+            bytes32(keccak256(abi.encodePacked(address(this)))).toEthSignedMessageHash().recover(_signedMessage) ==
+                _recipient,
             "Signed message not valid"
         );
 
-        this.bid(_bidAmount);
+        _bidBase(_bidAmount, _recipient);
     }
 
     function endAuction() public onlyOwner {
-        require(bids.length > 0, "Only able to end the auction when at least one bid has been placed");
-        uint256 _lastBidIndex = bids.length - 1;
-        if (_lastBidIndex > 0) {
-            (bool _safe, uint256 _value) = bids[_lastBidIndex].amount.tryMul(5);
+        uint256 _bidsLength = bids.length;
+        require(_bidsLength > 0, "Only able to end the auction when at least one bid has been placed");
+        if (_bidsLength > 1) {
+            Bid storage lastBid = bids[bids.length - 1];
+            (bool _safe, uint256 _value) = lastBid.amount.tryMul(5);
+            require(block.timestamp.sub(lastBid.timestamp) <= 15 * 60, "Auction is already over");
             require(_safe, "math overflow or underflow");
             require(
-                _value >= bids[_lastBidIndex - 1].amount,
+                _value >= bids[_bidsLength - 2].amount,
                 "To end auction manually, last bid must be at least 5x previous"
             );
         } else {
@@ -104,6 +110,7 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
 
     function ownerSettle() public {
         require(!ownerSettled, "Owner can settle only once");
+        require(bids.length > 0, "Auction has not started");
         ownerSettled = true;
         Bid storage lastBid = bids[bids.length - 1];
         addressToLockedAmount[lastBid.bidder] = 0;
@@ -115,6 +122,7 @@ contract AuctionLibrary is Ownable, PrizeManager, ReentrancyGuard {
 
     function winnerSettle() public {
         require(!winnerSettled, "Winner can only settle only once");
+        require(bids.length > 0, "Auction has not started");
         winnerSettled = true;
         Bid storage lastBid = bids[bids.length - 1];
         require(!isAuctionActive || block.timestamp.sub(lastBid.timestamp) >= 15 * 60, "Auction is not over");
