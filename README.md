@@ -1,20 +1,3 @@
-# Arcade.xyz Solidity Interview Challenge
-
-Welcome to the Arcade.xyz Solidity Interview Challenge! This challenge is meant to test your skills around protocol design, architecture, and implementation. It shouldn't be too hard, but it shouldn't be too easy either.
-
-The challenge will take place in a series of steps, as seen below. Please do each step one at a time, in order. We cannot give credit for any completed steps that may be after an uncompleted step.
-
-If you have any questions, feel free to ask your contact. Talking is good! The more we hear from you as you work through the problem below, the better sense we can get of your strengths and weaknesses as a Solidity developer. We want you to get as far as you can, but by no means do you need to complete every step to be successful. The most important thing is for your interviewer to get a sense of how you'd approach a problem and work on it. After this challenge is complete, you and your interviewer will schedule a call to discuss the design of the contract.
-
-To work on the challenge, please clone this repo and create a branch with your name on it. Remember to set up the repo and install dependencies before you work on your code. The repo comes pre-loaded with a set of linters, configs, and test harnesses for your convenience, but no starter code. When the challenge ends, please push your branch.
-
-```
-git clone https://github.com/Non-fungible-Technologies/solidity-interview-challenge
-git checkout -b <your name>
-
-yarn
-```
-
 ## Prompt
 
 The goal of this challenge is to design an on-chain auction system for NFTs. By the end of the challenge, we should have a fully-functional auction contract, similar to one that supports ecosystems like [Foundation](https://foundation.app) and [SuperRare](https://superrare.co). Please write your contracts from scratch, and refrain from copying these - we've studied these contracts and we know the idioms they use.
@@ -27,12 +10,12 @@ Complete the following steps to implement the auction system, in order:
 4. The system should be able to handle multiple auctions running at once.
 5. A bidder should be able to place a bid for a certain auction, with their bid being deposited into the contract.
 6. A bidder should have any funds deposited into the contract returned to them if they are outbid.
-8. After the first bid, the auction ends 15 minutes after the last bid is placed. Each new bid should extend the auction 15 minutes.
-9. After the auction is complete, either the creator or winning bidder should be able to 'settle' the auction, with the tokens transferred to the creator, and the NFT transferred to the winning bidder.
-10. The auction should have a 'quick finish' option - if any bid comes in that is 5 times higher than the previous bid, the creator should be able to end the instantly end auction if they so choose (as long as the auction hasn't ended already).
-11. The auction should support 'third-party delivery' - when a bidder places a bid, they can optionally choose to have the NFT delivered to a different address if they win. This third-party address should provide a signature attesting that they want to receive the NFT, which the bidder should provide at the time of the transaction. A bid should be invalid if the signature is not provided, or the signer does not match the desired third-party receiver.
-12. The auction should support bundling - instead of one ERC721 asset being auctioned off, a creator should be able to auction multiple assets off in a bundle. There is a single auction for the bundle, no matter how many assets go into the bundle. All assets should be delivered at once during settlement.
-13. Extend bundling to also support ERC1155 and ERC20.
+7. After the first bid, the auction ends 15 minutes after the last bid is placed. Each new bid should extend the auction 15 minutes.
+8. After the auction is complete, either the creator or winning bidder should be able to 'settle' the auction, with the tokens transferred to the creator, and the NFT transferred to the winning bidder.
+9. The auction should have a 'quick finish' option - if any bid comes in that is 5 times higher than the previous bid, the creator should be able to end the instantly end auction if they so choose (as long as the auction hasn't ended already).
+10. The auction should support 'third-party delivery' - when a bidder places a bid, they can optionally choose to have the NFT delivered to a different address if they win. This third-party address should provide a signature attesting that they want to receive the NFT, which the bidder should provide at the time of the transaction. A bid should be invalid if the signature is not provided, or the signer does not match the desired third-party receiver.
+11. The auction should support bundling - instead of one ERC721 asset being auctioned off, a creator should be able to auction multiple assets off in a bundle. There is a single auction for the bundle, no matter how many assets go into the bundle. All assets should be delivered at once during settlement.
+12. Extend bundling to also support ERC1155 and ERC20.
 
 Beyond the system requirements above, and the guidelines on how much time to spend, this challenge is open-ended. Experimentation is encouraged! Feel free to extend with new features, or harden the system with tests and/or documentation.
 
